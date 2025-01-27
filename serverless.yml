@@ -45,6 +45,13 @@ functions:
           path: /loginUser
           method: get
 
+  createBook:
+    handler: handlers/createBook.createBook
+    events:
+      - httpApi:
+          path: /createBook
+          method: post
+
 resources:
   Resources:
     UsersTable:
@@ -63,4 +70,10 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: notnot
+          - AttributeName: bookId
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: bookId
+            KeyType: HASH
+        TableName: ${self:service}-bookTable-${sls:stage}
