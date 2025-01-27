@@ -1,0 +1,66 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: sandamali
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: TestProject
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  environment:
+    DYNAMODB_USERS_TABLE: ${self:service}-usersTable-${sls:stage}
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Scan
+          Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-usersTable-${sls:stage}
+
+plugins:
+  - serverless-offline
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+
+  signupUser:
+    handler: handlers/signupUser.signupUser
+    events:
+      - httpApi:
+          path: /signupUser
+          method: post
+
+  loginUser:
+    handler: handlers/loginUser.loginUser
+    events:
+      - httpApi:
+          path: /loginUser
+          method: get
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: UserId
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: UserId
+            KeyType: HASH
+        TableName: ${self:service}-usersTable-${sls:stage}
+
+    BookTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: notnot
