@@ -55,6 +55,13 @@ functions:
           path: /createBook
           method: post
 
+  getAllBooks:
+    handler: handlers/getAllBooks.getAllBooks
+    events:
+      - httpApi:
+          path: /getAllBooks
+          method: get
+
 resources:
   Resources:
     UsersTable:
