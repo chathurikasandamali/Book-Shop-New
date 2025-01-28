@@ -8,6 +8,7 @@ provider:
   runtime: nodejs20.x
   environment:
     DYNAMODB_USERS_TABLE: ${self:service}-usersTable-${sls:stage}
+    DYNAMODB_BOOK_TABLE: ${self:service}-bookTable-${sls:stage}
   iam:
     role:
       statements:
@@ -18,7 +19,9 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
             - dynamodb:Scan
-          Resource: arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-usersTable-${sls:stage}
+          Resource: 
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-usersTable-${sls:stage}
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-bookTable-${sls:stage}
 
 plugins:
   - serverless-offline
